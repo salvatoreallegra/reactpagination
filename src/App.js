@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./App.css";
+import Posts from "./Components/Posts";
 
 function App() {
   //setup state
@@ -14,16 +15,19 @@ function App() {
     const fetchPosts = async () => {
       setLoading(true);
       const res = await axios.get("https://jsonplaceholder.typicode.com/posts");
-      setPosts = res.data;
+      setPosts(res.data);
       setLoading(false);
     };
+    fetchPosts(); //call Axios on component mount
   }, []);
-
-  fetchPosts(); //call Axios
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
   console.log(posts);
   return (
-    <div className="App">
-      <h1>Hi</h1>
+    <div className="container mt-5">
+      <h1 className="text-primary mb-3">Blog Pagination</h1>
+      <Posts posts={currentPosts} loading={loading} />
     </div>
   );
 }
